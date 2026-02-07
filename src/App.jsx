@@ -1,35 +1,25 @@
 import { useState } from 'react'
+import {days, messages} from './constants'
 import './App.css'
 
 function App() {
-  
-  const days = [
-    { date: 7, name: 'Feb 7', emoji: '🌹' },
-    { date: 8, name: 'Feb 8', emoji: '💍' },
-    { date: 9, name: 'Feb 9', emoji: '🍫' },
-    { date: 10, name: 'Feb 10', emoji: '🧸' },
-    { date: 11, name: 'Feb 11', emoji: '💝' },
-    { date: 12, name: 'Feb 12', emoji: '🤗' },
-    { date: 13, name: 'Feb 13', emoji: '💋' },
-    { date: 14, name: 'Feb 14', emoji: '❤️' }
-  ]
 
-  const messages = [
-    "You're amazing! 💕",
-    "You light up my world! ✨",
-    "You're one in a million! 🌟",
-    "You make me smile! 😊",
-    "You're absolutely wonderful! 🌺",
-    "You're my sunshine! ☀️",
-    "You're incredible! 💖",
-    "You're simply the best! 🎉",
-    "You're a gem! 💎",
-    "You're truly special! 🌹"
-  ]
+  // Get today's date
+  const today = new Date()
+  const month = today.getMonth() 
+  const date = today.getDate()
+  const year = today.getFullYear()
+  // const month = 1; const date = 5; const year = 2026; 
 
-  const today = new Date();
-  const month = today.getMonth();
-  const date = today.getDate();
+  // Check if we're in the Valentine week period
+  const isAfterValentineWeek = year > 2026 || (year === 2026 && (month > 1 || (month === 1 && date > 14)))
+  const isDuringValentineWeek = !isAfterValentineWeek
+
+  // Determine current day (during Feb 7-14, 2026)
+  let currentDay = null
+  if (isDuringValentineWeek && month === 1) { // February
+    currentDay = date
+  }
 
   const [roses, setRoses] = useState([])
   const [showMessage, setShowMessage] = useState(null)
@@ -43,8 +33,14 @@ function App() {
   })
 
   const plantRose = (e) => {
-    // Don't plant if clicking on a rose
     if (e.target.classList.contains('rose')) return
+    
+    // Don't plant roses if clicking on buttons or their children
+    if (e.target.closest('.day-selector') || 
+        e.target.closest('.day-button') ||
+        e.target.tagName === 'BUTTON') {
+      return
+    }
     
     const randomMessage = messages[Math.floor(Math.random() * messages.length)]
     const newRose = {
@@ -60,6 +56,13 @@ function App() {
     e.stopPropagation()
     setShowMessage({ text: rose.message, x: rose.x, y: rose.y })
     setTimeout(() => setShowMessage(null), 2000)
+  }
+
+  // Check if a day should be unlocked
+  const isDayUnlocked = (dayDate) => {
+    if (isAfterValentineWeek) return true // All days unlocked after Feb 14
+    if (currentDay === null) return false // Nothing unlocked before Feb 7
+    return dayDate <= currentDay // Unlock days up to current date
   }
 
   return (
@@ -85,8 +88,8 @@ function App() {
         {days.map((day) => (
           <button
             key={day.date}
-            className={`day-button ${currentDay === day.date ? 'active' : 'locked'}`}
-            disabled={currentDay !== day.date}
+            className={`day-button ${isDayUnlocked(day.date) ? 'active' : ''} ${!isDayUnlocked(day.date) ? 'locked' : ''}`}
+            disabled={!isDayUnlocked(day.date)}
           >
             <span className="day-emoji">{day.emoji}</span>
             <span className="day-name">{day.name}</span>
