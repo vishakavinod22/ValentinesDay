@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import {days, messages} from './constants'
+import ProposeDay from './components/ProposeDay'
 import './App.css'
 
 function App() {
@@ -9,7 +10,7 @@ function App() {
   const month = today.getMonth() 
   const date = today.getDate()
   const year = today.getFullYear()
-  // const month = 1; const date = 5; const year = 2026; 
+  // const month = 1; const date = 8; const year = 2026; 
 
   // Check if we're in the Valentine week period
   const isAfterValentineWeek = year > 2026 || (year === 2026 && (month > 1 || (month === 1 && date > 14)))
@@ -23,6 +24,8 @@ function App() {
 
   const [roses, setRoses] = useState([])
   const [showMessage, setShowMessage] = useState(null)
+  const [selectedDay, setSelectedDay] = useState(null) 
+
   const [petals] = useState(() => {
     return Array.from({ length: 15 }, (_, i) => ({
       id: i,
@@ -88,8 +91,9 @@ function App() {
         {days.map((day) => (
           <button
             key={day.date}
-            className={`day-button ${isDayUnlocked(day.date) ? 'active' : ''} ${!isDayUnlocked(day.date) ? 'locked' : ''}`}
+            className={`day-button ${selectedDay === day.date ? 'active' : isDayUnlocked(day.date) ? 'active' : ''} ${!isDayUnlocked(day.date) ? 'locked' : ''}`}
             disabled={!isDayUnlocked(day.date)}
+            onClick={() => setSelectedDay(day.date)}
           >
             <span className="day-emoji">{day.emoji}</span>
             <span className="day-name">{day.name}</span>
@@ -97,30 +101,37 @@ function App() {
         ))}
       </div>
 
-      <h1 className="title">Rose Day 🌹</h1>
-      
-      <p className="instruction">Click anywhere to plant a rose! Click roses to reveal messages! 💌</p>
-      <p className="counter">Roses planted: {roses.length}</p>
+      {/* Show different content based on selected day */}
+      {(!selectedDay || selectedDay === 7) && (
+        <>
+          <h1 className="title">Rose Day 🌹</h1>
+          
+          <p className="instruction">Click anywhere to plant a rose! Click roses to reveal messages! 💌</p>
+          <p className="counter">Roses planted: {roses.length}</p>
 
-      {roses.map((rose) => (
-        <div
-          key={rose.id}
-          className="rose"
-          style={{ left: rose.x, top: rose.y }}
-          onClick={(e) => handleRoseClick(e, rose)}
-        >
-          🌹
-        </div>
-      ))}
+          {roses.map((rose) => (
+            <div
+              key={rose.id}
+              className="rose"
+              style={{ left: rose.x, top: rose.y }}
+              onClick={(e) => handleRoseClick(e, rose)}
+            >
+              🌹
+            </div>
+          ))}
 
-      {showMessage && (
-        <div
-          className="message-popup"
-          style={{ left: showMessage.x, top: showMessage.y }}
-        >
-          {showMessage.text}
-        </div>
+          {showMessage && (
+            <div
+              className="message-popup"
+              style={{ left: showMessage.x, top: showMessage.y }}
+            >
+              {showMessage.text}
+            </div>
+          )}
+        </>
       )}
+
+      {selectedDay === 8 && <ProposeDay />}
     </div>
   )
 }
