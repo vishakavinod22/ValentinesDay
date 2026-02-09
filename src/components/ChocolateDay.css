@@ -111,9 +111,23 @@
   
   .chocolate {
     position: absolute;
+    top: -10%;
     font-size: 3rem;
-    transition: top 0.05s linear;
+    pointer-events: none;
   }
+  
+  /* .chocolate.falling {
+    animation: fall-down 5s linear forwards;
+  }
+  
+  @keyframes fall-down {
+    from {
+      top: -10%;
+    }
+    to {
+      top: 110%;
+    }
+  } */
   
   @keyframes pulse {
     0%, 100% {

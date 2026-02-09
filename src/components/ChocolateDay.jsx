@@ -4,11 +4,11 @@ import './ChocolateDay.css'
 function ChocolateDay() {
   const [gameState, setGameState] = useState('start') // 'start', 'playing', 'ended'
   const [score, setScore] = useState(0)
-//   const [lives, setLives] = useState(3)
   const [timeLeft, setTimeLeft] = useState(60)
   const [chocolates, setChocolates] = useState([])
   const [basketPosition, setBasketPosition] = useState(50) // percentage from left
   const gameAreaRef = useRef(null)
+  const nextId = useRef(0)
 
   const chocolateTypes = [
     { emoji: '🍫', points: 1, rarity: 0.4 },
@@ -33,13 +33,6 @@ function ChocolateDay() {
 
     return () => clearInterval(timer)
   }, [gameState])
-
-//   // Check lives
-//   useEffect(() => {
-//     if (lives <= 0 && gameState === 'playing') {
-//       setGameState('ended')
-//     }
-//   }, [lives, gameState])
 
   // Mouse movement for basket
   useEffect(() => {
@@ -75,47 +68,49 @@ function ChocolateDay() {
       }
 
       const newChocolate = {
-        id: Date.now() + Math.random(),
+        id: nextId.current++,
         emoji: selectedType.emoji,
         points: selectedType.points,
         x: Math.random() * 90 + 5, // 5% to 95%
-        y: -10
+        spawnTime: Date.now()
       }
 
       setChocolates((prev) => [...prev, newChocolate])
-    }, 2000) // Spawn every 800ms
+    }, 3000) // Spawn every 1000ms
 
     return () => clearInterval(spawnInterval)
   }, [gameState])
 
-  // Move chocolates down
+  // Check collisions and clean up chocolates
   useEffect(() => {
     if (gameState !== 'playing') return
 
-    const moveInterval = setInterval(() => {
+    const checkInterval = setInterval(() => {
+      const now = Date.now()
+      
       setChocolates((prev) => {
-        return prev.map((choc) => ({
-          ...choc,
-          y: choc.y + 3
-        })).filter((choc) => {
+        return prev.filter((choc) => {
+          const elapsed = now - choc.spawnTime
+          const chocolateY = (elapsed / 15) // Y position based on time elapsed
+          
           // Check if caught
           const distance = Math.abs(choc.x - basketPosition)
-          if (choc.y >= 85 && choc.y <= 95 && distance < 8) {
+          if (chocolateY >= 340 && chocolateY <= 380 && distance < 10) {
             setScore((s) => s + choc.points)
             return false // Remove caught chocolate
           }
 
           // Check if missed (fell off screen)
-          if (choc.y > 100) {
-            return false // Remove missed chocolate (no penalty)
+          if (chocolateY > 420) {
+            return false // Remove missed chocolate
           }
 
           return true // Keep chocolate
         })
       })
-    }, 100) // Move every 50ms
+    }, 50) // Check every 50ms
 
-    return () => clearInterval(moveInterval)
+    return () => clearInterval(checkInterval)
   }, [gameState, basketPosition])
 
   const startGame = () => {
@@ -123,6 +118,7 @@ function ChocolateDay() {
     setScore(0)
     setTimeLeft(60)
     setChocolates([])
+    nextId.current = 0
   }
 
   const playAgain = () => {
@@ -166,6 +162,12 @@ function ChocolateDay() {
     )
   }
 
+  // Calculate Y position for each chocolate based on time
+  const getChocolateY = (choc) => {
+    const elapsed = Date.now() - choc.spawnTime
+    return (elapsed / 15)  // Faster fall speed
+  }
+
   // Playing screen
   return (
     <div className="chocolate-container">
@@ -180,7 +182,11 @@ function ChocolateDay() {
           <div
             key={choc.id}
             className="chocolate"
-            style={{ left: `${choc.x}%`, top: `${choc.y}%` }}
+            style={{ 
+              left: `${choc.x}%`, 
+              top: `${getChocolateY(choc)}px`,
+              transition: 'top 0.05s linear'
+            }}
           >
             {choc.emoji}
           </div>
