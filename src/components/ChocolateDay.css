@@ -1,0 +1,125 @@
+.chocolate-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;  /* Changed from center */
+    position: relative;
+    padding: 20px;
+    padding-top: 80px;  /* Add space from top */
+  }
+  
+  .chocolate-title {
+    font-size: 3rem;
+    color: #ff6b9d;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  .chocolate-instructions {
+    font-size: 1.3rem;
+    color: #ffb3d9;
+    text-align: center;
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+  
+  .start-button {
+    padding: 20px 60px;
+    font-size: 1.8rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #ff6b9d, #c94b7a);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(255, 107, 157, 0.4);
+  }
+  
+  .start-button:hover {
+    box-shadow: 0 15px 40px rgba(255, 107, 157, 0.6);
+    transform: translateY(-3px) scale(1.05);
+  }
+  
+  .final-score {
+    font-size: 2.5rem;
+    color: #ff6b9d;
+    font-weight: bold;
+    margin: 20px 0;
+  }
+  
+  .end-message {
+    font-size: 1.8rem;
+    color: #ffb3d9;
+    margin-bottom: 40px;
+  }
+  
+  /* Game screen */
+  .game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90vw;  /* Fixed width - 90% of viewport */
+    max-width: 1000px;  /* Max width */
+    margin-bottom: 20px;
+    padding: 15px 25px;
+    background: rgba(255, 107, 157, 0.15);
+    border-radius: 50px;
+    border: 2px solid rgba(255, 107, 157, 0.3);
+  }
+  
+  .timer {
+    color: #ff6b9d;
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+  
+  .score {
+    color: #ffb3d9;
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+  
+  .lives {
+    display: flex;
+    gap: 5px;
+    font-size: 1.5rem;
+  }
+
+  .game-area {
+    position: relative;
+    width: 90vw;  /* Fixed width - 90% of viewport */
+    max-width: 1000px;  /* Max width */
+    height: 400px;
+    background: rgba(255, 107, 157, 0.1);
+    border: 3px solid rgba(255, 107, 157, 0.3);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  
+  .basket {
+    position: absolute;
+    bottom: 20px;
+    transform: translateX(-50%);
+    font-size: 4rem;
+    transition: left 0.1s ease;
+    z-index: 10;
+  }
+  
+  .chocolate {
+    position: absolute;
+    font-size: 3rem;
+    transition: top 0.05s linear;
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }

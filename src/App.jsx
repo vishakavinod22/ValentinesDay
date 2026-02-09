@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import {days, messages} from './constants'
+import ChocolateDay from './components/ChocolateDay'
 import ProposeDay from './components/ProposeDay'
 import './App.css'
 
@@ -7,10 +8,10 @@ function App() {
 
   // Get today's date
   const today = new Date()
-  const month = today.getMonth() 
-  const date = today.getDate()
-  const year = today.getFullYear()
-  // const month = 1; const date = 8; const year = 2026; 
+  // const month = today.getMonth() 
+  // const date = today.getDate()
+  // const year = today.getFullYear()
+  const month = 1; const date = 9; const year = 2026; 
 
   // Check if we're in the Valentine week period
   const isAfterValentineWeek = year > 2026 || (year === 2026 && (month > 1 || (month === 1 && date > 14)))
@@ -132,6 +133,7 @@ function App() {
       )}
 
       {selectedDay === 8 && <ProposeDay />}
+      {selectedDay === 9 && <ChocolateDay />}  
     </div>
   )
 }
