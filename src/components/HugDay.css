@@ -1,0 +1,219 @@
+.hug-container {
+    min-height: 100vh;
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    padding: 10px;
+    padding-top: 40px;
+    overflow-y: auto;
+  }
+  
+  .hug-title {
+    font-size: 2.5rem;
+    color: #ff6b9d;
+    text-align: center;
+    margin-bottom: 10px;
+    text-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  .hug-instructions {
+    font-size: 1.2rem;
+    color: #ffb3d9;
+    text-align: center;
+    margin-bottom: 20px;
+    line-height: 1.8;
+  }
+  
+  .hug-start-button {
+    padding: 20px 60px;
+    font-size: 1.8rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #ff6b9d, #c94b7a);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(255, 107, 157, 0.4);
+  }
+  
+  .hug-start-button:hover {
+    box-shadow: 0 15px 40px rgba(255, 107, 157, 0.6);
+    transform: translateY(-3px) scale(1.05);
+  }
+  
+  .hug-final-score {
+    font-size: 2rem;
+    color: #ffb3d9;
+    font-weight: bold;
+    margin: 20px 0;
+  }
+  
+  .hug-success, .hug-fail {
+    margin: 30px 0;
+    text-align: center;
+  }
+  
+  .hug-teddies-final {
+    font-size: 6rem;
+    margin: 20px 0;
+    animation: hug-bounce 0.6s ease;
+  }
+  
+  .hug-teddies-final-apart {
+    font-size: 4rem;
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    gap: 100px;
+  }
+  
+  .hug-sad {
+    font-size: 3rem;
+  }
+  
+  .hug-success-message {
+    font-size: 1.8rem;
+    color: #ff6b9d;
+    margin-top: 20px;
+  }
+  
+  .hug-fail-message {
+    font-size: 1.8rem;
+    color: #ffb3d9;
+    margin-top: 20px;
+  }
+  
+  /* Playing screen */
+  .hug-progress-info {
+    display: flex;
+    justify-content: space-between;
+    width: 800px; 
+    max-width: 90vw; 
+    margin-bottom: 10px;
+    font-size: 1rem;
+    color: #ffb3d9;
+    font-weight: 600;
+  }
+  
+  .hug-progress-container {
+    width: 800px; 
+    max-width: 90vw; 
+    margin: 10px 0;
+  }
+  
+  .hug-progress-bar {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    background: rgba(255, 107, 157, 0.2);
+    border-radius: 30px;
+    border: 3px solid rgba(255, 107, 157, 0.4);
+    overflow: visible;
+    display: flex;
+    align-items: center;
+  }
+  
+  .hug-teddy-left, .hug-teddy-right {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2.5rem;
+    transition: all 0.6s ease;
+    filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
+  }
+  
+  .hug-need-info {
+    color: #ffb3d9;
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+    font-style: italic;
+    width: 800px; 
+    max-width: 90vw;
+    text-align: center;
+  }
+  
+  .hug-question-box {
+    width: 800px; 
+    max-width: 90vw;
+    background: rgba(255, 107, 157, 0.1);
+    border: 3px solid rgba(255, 107, 157, 0.3);
+    border-radius: 20px;
+    padding: 15px;
+  }
+  
+  .hug-question {
+    font-size: 1.3rem;
+    color: #ff6b9d;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  
+  .hug-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .hug-option-button {
+    padding: 15px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    background: rgba(255, 107, 157, 0.2);
+    color: #ffb3d9;
+    border: 2px solid rgba(255, 107, 157, 0.4);
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .hug-option-button:hover:not(:disabled) {
+    background: rgba(255, 107, 157, 0.3);
+    transform: translateX(5px);
+    border-color: #ff6b9d;
+  }
+  
+  .hug-option-button:disabled {
+    cursor: not-allowed;
+  }
+  
+  .hug-option-button.correct {
+    background: rgba(76, 175, 80, 0.3);
+    border-color: #4caf50;
+    color: #4caf50;
+  }
+  
+  .hug-option-button.wrong {
+    background: rgba(244, 67, 54, 0.3);
+    border-color: #f44336;
+    color: #f44336;
+  }
+  
+  @keyframes hug-bounce {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  .hug-teddies-final-apart-text {
+    font-size: 3rem;
+    margin: 20px 0;
+    text-align: center;
+    letter-spacing: 10px;
+  }
