@@ -1,0 +1,120 @@
+.kiss-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    padding: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    overflow-y: scroll; /* Force scrolling */
+  }
+  
+  .kiss-title {
+    font-size: 2.5rem;
+    color: #ff6b9d;
+    text-align: center;
+    margin-bottom: 10px;
+    text-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  .kiss-instructions {
+    font-size: 1.2rem;
+    color: #ffb3d9;
+    text-align: center;
+    margin-bottom: 20px;
+    line-height: 1.8;
+  }
+  
+  .kiss-start-button {
+    padding: 20px 60px;
+    font-size: 1.8rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #ff6b9d, #c94b7a);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(255, 107, 157, 0.4);
+  }
+  
+  .kiss-start-button:hover {
+    box-shadow: 0 15px 40px rgba(255, 107, 157, 0.6);
+    transform: translateY(-3px) scale(1.05);
+  }
+  
+  .kiss-moves {
+    font-size: 1.3rem;
+    color: #ffb3d9;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  
+  .kiss-puzzle-board {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    max-width: 85vw;
+    aspect-ratio: 1;
+    background: rgba(255, 107, 157, 0.1);
+    border: 3px solid rgba(255, 107, 157, 0.4);
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  
+  .kiss-tile {
+    position: absolute;
+    border: 1px solid rgba(255, 107, 157, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-repeat: no-repeat;
+  }
+  
+  .kiss-tile:not(.empty):hover {
+    border-color: rgba(255, 107, 157, 0.6);
+    transform: scale(1.02);
+    z-index: 10;
+  }
+  
+  .kiss-tile.empty {
+    background: rgba(0, 0, 0, 0.3);
+    cursor: default;
+  }
+  
+  .kiss-solved-image {
+    width: 400px;
+    height: 400px;
+    max-width: 85vw;
+    aspect-ratio: 1;
+    margin: 20px 0;
+    border-radius: 15px;
+    overflow: hidden;
+    border: 3px solid rgba(255, 107, 157, 0.4);
+    box-shadow: 0 10px 40px rgba(255, 107, 157, 0.3);
+  }
+  
+  .kiss-solved-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .kiss-success {
+    font-size: 1.8rem;
+    color: #ff6b9d;
+    margin: 20px 0;
+    font-weight: bold;
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
