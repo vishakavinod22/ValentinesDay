@@ -28,14 +28,14 @@ function ValentineDay() {
 
   return (
     <div className="valentine-container">
-      <h1 className="valentine-title">Valentine's Day ❤️</h1>
+      <h1 className="valentine-title"> </h1>
 
       <div className={`valentine-card ${isOpen ? 'open' : ''}`} onClick={handleCardClick}>
         {/* Front of card (closed) */}
         <div className="card-front">
           <div className="card-front-content">
             <h2 className="card-front-title">Happy Valentine's Day</h2>
-            <p className="card-front-subtitle">❤️</p>
+            <p className="card-front-subtitle">💌</p>
             <p className="card-click-hint">Click to Open</p>
           </div>
         </div>
@@ -43,15 +43,15 @@ function ValentineDay() {
         {/* Inside of card (open) */}
         <div className="card-inside">
           <div className="card-left">
-            <div className="card-heart">💕</div>
+            <div className="card-heart">I Love You!</div>
           </div>
           <div className="card-right">
             <div className="card-message">
-              <p className="message-line">Wishing you a day</p>
+              <p className="message-line">Wishing you a life</p>
               <p className="message-line">filled with endless love,</p>
               <p className="message-line">joy, and happiness!</p>
-              <p className="message-signature">💕 ✨ 💖</p>
-              <p className="message-footer">Happy Valentine's Day!</p>
+              <p className="message-signature">Lots of Love</p>
+              <p className="message-footer">Your Valentine 🫶</p>
             </div>
           </div>
         </div>
