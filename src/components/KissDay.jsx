@@ -1,98 +1,95 @@
-import { useState, useEffect } from 'react'
-import heartsImage from '/src/images/hearts.jpg'
+import { useState } from 'react'
 import './KissDay.css'
+import heartsImage from '../assets/hearts.jpg'
 
 function KissDay() {
   const GRID_SIZE = 3
   const TILE_COUNT = GRID_SIZE * GRID_SIZE
-  const IMAGE_PATH = heartsImage
 
   const [tiles, setTiles] = useState([])
   const [gameState, setGameState] = useState('start') // 'start', 'playing', 'solved'
-  const [moves, setMoves] = useState(0)
+  const [draggedTile, setDraggedTile] = useState(null)
 
   // Initialize puzzle
   const initializePuzzle = () => {
     const tileArray = []
-    for (let i = 0; i < TILE_COUNT - 1; i++) {
+    for (let i = 0; i < TILE_COUNT; i++) {
       tileArray.push({
         id: i,
-        position: i,
+        currentPosition: i,
+        correctPosition: i,
         row: Math.floor(i / GRID_SIZE),
         col: i % GRID_SIZE
       })
     }
-    // Add empty tile at the end
-    tileArray.push({
-      id: TILE_COUNT - 1,
-      position: TILE_COUNT - 1,
-      row: GRID_SIZE - 1,
-      col: GRID_SIZE - 1,
-      isEmpty: true
-    })
     return tileArray
   }
 
   // Shuffle tiles
   const shuffleTiles = (tileArray) => {
     const shuffled = [...tileArray]
-    // Perform random valid moves to ensure solvability
-    for (let i = 0; i < 200; i++) {
-      const emptyTile = shuffled.find(t => t.isEmpty)
-      const movableTiles = getMovableTiles(shuffled, emptyTile)
-      if (movableTiles.length > 0) {
-        const randomTile = movableTiles[Math.floor(Math.random() * movableTiles.length)]
-        swapTiles(shuffled, randomTile, emptyTile)
-      }
+    // Fisher-Yates shuffle
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      const tempPosition = shuffled[i].currentPosition
+      shuffled[i].currentPosition = shuffled[j].currentPosition
+      shuffled[j].currentPosition = tempPosition
     }
-    return shuffled
-  }
-
-  // Get tiles that can move into empty space
-  const getMovableTiles = (tileArray, emptyTile) => {
-    return tileArray.filter(tile => {
-      if (tile.isEmpty) return false
-      const rowDiff = Math.abs(tile.row - emptyTile.row)
-      const colDiff = Math.abs(tile.col - emptyTile.col)
-      return (rowDiff === 1 && colDiff === 0) || (rowDiff === 0 && colDiff === 1)
+    
+    // Update row/col based on new positions
+    shuffled.forEach(tile => {
+      tile.row = Math.floor(tile.currentPosition / GRID_SIZE)
+      tile.col = tile.currentPosition % GRID_SIZE
     })
-  }
-
-  // Swap two tiles
-  const swapTiles = (tileArray, tile1, tile2) => {
-    const temp = { row: tile1.row, col: tile1.col, position: tile1.position }
-    tile1.row = tile2.row
-    tile1.col = tile2.col
-    tile1.position = tile2.position
-    tile2.row = temp.row
-    tile2.col = temp.col
-    tile2.position = temp.position
+    
+    return shuffled
   }
 
   // Check if puzzle is solved
   const isPuzzleSolved = (tileArray) => {
-    return tileArray.every(tile => tile.id === tile.position)
+    return tileArray.every(tile => tile.currentPosition === tile.correctPosition)
   }
 
-  // Handle tile click
-  const handleTileClick = (clickedTile) => {
-    if (clickedTile.isEmpty || gameState !== 'playing') return
+  // Handle drag start
+  const handleDragStart = (e, tile) => {
+    setDraggedTile(tile)
+    e.dataTransfer.effectAllowed = 'move'
+  }
 
-    const emptyTile = tiles.find(t => t.isEmpty)
-    const movableTiles = getMovableTiles(tiles, emptyTile)
+  // Handle drag over
+  const handleDragOver = (e) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+  }
 
-    if (movableTiles.includes(clickedTile)) {
-      const newTiles = [...tiles]
-      const clickedIndex = newTiles.findIndex(t => t.id === clickedTile.id)
-      const emptyIndex = newTiles.findIndex(t => t.isEmpty)
-      
-      swapTiles(newTiles, newTiles[clickedIndex], newTiles[emptyIndex])
-      setTiles(newTiles)
-      setMoves(moves + 1)
+  // Handle drop
+  const handleDrop = (e, targetTile) => {
+    e.preventDefault()
+    
+    if (!draggedTile || draggedTile.id === targetTile.id) return
 
-      if (isPuzzleSolved(newTiles)) {
-        setTimeout(() => setGameState('solved'), 300)
-      }
+    const newTiles = [...tiles]
+    const draggedIndex = newTiles.findIndex(t => t.id === draggedTile.id)
+    const targetIndex = newTiles.findIndex(t => t.id === targetTile.id)
+
+    // Swap positions
+    const tempPosition = newTiles[draggedIndex].currentPosition
+    const tempRow = newTiles[draggedIndex].row
+    const tempCol = newTiles[draggedIndex].col
+
+    newTiles[draggedIndex].currentPosition = newTiles[targetIndex].currentPosition
+    newTiles[draggedIndex].row = newTiles[targetIndex].row
+    newTiles[draggedIndex].col = newTiles[targetIndex].col
+
+    newTiles[targetIndex].currentPosition = tempPosition
+    newTiles[targetIndex].row = tempRow
+    newTiles[targetIndex].col = tempCol
+
+    setTiles(newTiles)
+    setDraggedTile(null)
+
+    if (isPuzzleSolved(newTiles)) {
+      setTimeout(() => setGameState('solved'), 300)
     }
   }
 
@@ -100,7 +97,6 @@ function KissDay() {
     const initialTiles = initializePuzzle()
     const shuffledTiles = shuffleTiles(initialTiles)
     setTiles(shuffledTiles)
-    setMoves(0)
     setGameState('playing')
   }
 
@@ -110,8 +106,7 @@ function KissDay() {
       <div className="kiss-container">
         <h1 className="kiss-title">Kiss Day Puzzle 💋</h1>
         <p className="kiss-instructions">
-          Slide the tiles to reveal the hearts! 💕<br/>
-          Click tiles next to the empty space to move them.
+          Drag and drop tiles today! 💕
         </p>
         <button className="kiss-start-button" onClick={startGame}>
           Start Puzzle
@@ -124,12 +119,12 @@ function KissDay() {
   if (gameState === 'solved') {
     return (
       <div className="kiss-container">
-        <h1 className="kiss-title">You Unlocked All The Kisses! 💋💕</h1>
+        <h1 className="kiss-title win">Yaaay Unlocked All The Kisses! 💋💕</h1>
         <div className="kiss-solved-image">
-          <img src={IMAGE_PATH} alt="Hearts" />
+          <img src={heartsImage} alt="Hearts" />
         </div>
-        <p className="kiss-success">Completed in {moves} moves! ✨</p>
-        <button className="kiss-start-button" onClick={startGame}>
+       
+        <button className="kiss-start-button win" onClick={startGame}>
           Play Again
         </button>
       </div>
@@ -142,23 +137,26 @@ function KissDay() {
   return (
     <div className="kiss-container">
       <h1 className="kiss-title">Kiss Day Puzzle 💋</h1>
-      <p className="kiss-moves">Moves: {moves}</p>
+      <p className="kiss-instructions-small">Drag and drop tiles to arrange them correctly!</p>
 
       <div className="kiss-puzzle-board">
         {tiles.map((tile) => (
           <div
             key={tile.id}
-            className={`kiss-tile ${tile.isEmpty ? 'empty' : ''}`}
+            className="kiss-tile"
+            draggable
+            onDragStart={(e) => handleDragStart(e, tile)}
+            onDragOver={handleDragOver}
+            onDrop={(e) => handleDrop(e, tile)}
             style={{
-              width: `${tileSize}%`,
-              height: `${tileSize}%`,
-              left: `${tile.col * tileSize}%`,
-              top: `${tile.row * tileSize}%`,
-              backgroundImage: tile.isEmpty ? 'none' : `url(${IMAGE_PATH})`,
-              backgroundSize: `${GRID_SIZE * 100}%`,
-              backgroundPosition: `${(tile.id % GRID_SIZE) * (100 / (GRID_SIZE - 1))}% ${Math.floor(tile.id / GRID_SIZE) * (100 / (GRID_SIZE - 1))}%`
-            }}
-            onClick={() => handleTileClick(tile)}
+                width: `${tileSize}%`,
+                height: `${tileSize}%`,
+                left: `${tile.col * tileSize}%`,
+                top: `${tile.row * tileSize}%`,
+                backgroundImage: `url(${heartsImage})`,
+                backgroundSize: `${GRID_SIZE * 100}% ${GRID_SIZE * 100}%`,
+                backgroundPosition: `${(tile.id % GRID_SIZE) / (GRID_SIZE - 1) * 100}% ${Math.floor(tile.id / GRID_SIZE) / (GRID_SIZE - 1) * 100}%`
+              }}
           />
         ))}
       </div>
