@@ -7,6 +7,7 @@ import PromiseDay from './components/PromiseDay'
 import HugDay from './components/HugDay'
 import './App.css'
 import KissDay from './components/KissDay'
+import ValentineDay from './components/ValentineDay'
 
 function App() {
 
@@ -15,7 +16,7 @@ function App() {
   // const month = today.getMonth() 
   // const date = today.getDate()
   // const year = today.getFullYear()
-  const month = 1; const date = 13; const year = 2026; 
+  const month = 1; const date = 15; const year = 2026; 
 
   // Check if we're in the Valentine week period
   const isAfterValentineWeek = year > 2026 || (year === 2026 && (month > 1 || (month === 1 && date > 14)))
@@ -142,6 +143,7 @@ function App() {
       {selectedDay === 11 && <PromiseDay />} 
       {selectedDay === 12 && <HugDay />} 
       {selectedDay === 13 && <KissDay />} 
+      {selectedDay === 14 && <ValentineDay />} 
     </div>
   )
 }
